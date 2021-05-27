@@ -1,0 +1,12 @@
+[
+  { "shipId": 1, "containersCount": 7 },
+  { "shipId": 2, "containersCount": 3 },
+  { "shipId": 3, "containersCount": 5 },
+  { "shipId": 4, "containersCount": 3 },
+  { "shipId": 5, "containersCount": 7 },
+  { "shipId": 6, "containersCount": 10 },
+  { "shipId": 7, "containersCount": 2 },
+  { "shipId": 8, "containersCount": 9 },
+  { "shipId": 9, "containersCount": 10 },
+  { "shipId": 10, "containersCount": 4 }
+]
