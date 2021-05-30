@@ -63,24 +63,30 @@ public class Port {
 
   public void increaseContainersCount() {
     containerOperationLocker.lock();
-    if (containerCount < CONTAINER_CAPACITY) {
-      ++containerCount;
+    try {
+      if (containerCount < CONTAINER_CAPACITY) {
+        ++containerCount;
 
-      if (containerCount > CONTAINER_MAX_COUNT) {
-        containerCount = (int) (CONTAINER_CAPACITY * 0.75);
+        if (containerCount > CONTAINER_MAX_COUNT) {
+          containerCount = (int) (CONTAINER_CAPACITY * 0.75);
+        }
       }
+    } finally {
+      containerOperationLocker.unlock();
     }
-    containerOperationLocker.unlock();
   }
 
   public void decreaseContainersCount() {
     containerOperationLocker.lock();
-    if (containerCount > 0) {
-      --containerCount;
+    try {
+      if (containerCount > 0) {
+        --containerCount;
 
-      if (containerCount < CONTAINER_MIN_COUNT) {
-        containerCount = (int) (CONTAINER_CAPACITY * 0.75);
+        if (containerCount < CONTAINER_MIN_COUNT) {
+          containerCount = (int) (CONTAINER_CAPACITY * 0.75);
+        }
       }
+    } finally {
       containerOperationLocker.unlock();
     }
   }
@@ -128,9 +134,12 @@ public class Port {
   public void setPier(Pier pier) {
     if (pier != null) {
       pierQueueLocker.lock();
-      pierQueue.add(pier);
-      pierQueueCondition.signal();
-      pierQueueLocker.unlock();
+      try {
+        pierQueue.add(pier);
+        pierQueueCondition.signal();
+      } finally {
+        pierQueueLocker.unlock();
+      }
     }
   }
 }
