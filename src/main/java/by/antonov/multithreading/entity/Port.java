@@ -61,8 +61,7 @@ public class Port {
     shipsInQueue.add(ship);
   }
 
-  public Boolean increaseContainersCount() {
-    boolean result = false;
+  public void increaseContainersCount() {
     containerOperationLocker.lock();
     if (containerCount < CONTAINER_CAPACITY) {
       ++containerCount;
@@ -70,14 +69,11 @@ public class Port {
       if (containerCount > CONTAINER_MAX_COUNT) {
         containerCount = (int) (CONTAINER_CAPACITY * 0.75);
       }
-      result = true;
     }
     containerOperationLocker.unlock();
-    return result;
   }
 
-  public Boolean decreaseContainersCount() {
-    boolean result = false;
+  public void decreaseContainersCount() {
     containerOperationLocker.lock();
     if (containerCount > 0) {
       --containerCount;
@@ -86,10 +82,7 @@ public class Port {
         containerCount = (int) (CONTAINER_CAPACITY * 0.75);
       }
       containerOperationLocker.unlock();
-      result = true;
     }
-
-    return result;
   }
 
   public void startOperation() {
@@ -106,7 +99,9 @@ public class Port {
         logger.info("Termination by timeout.");
       }
     } catch (InterruptedException e) {
-      logger.error(String.format("Port operation error. Message: %s", e.getMessage()));
+      logger.error(String.format("Port.startOperation() InterruptedException. Thread: %s Message: %s",
+                                 Thread.currentThread().getName(), e.getMessage()));
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -120,7 +115,8 @@ public class Port {
       }
 
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      logger.error(String.format("Port.getPier() InterruptedException. Thread: %s Message: %s",
+                                 Thread.currentThread().getName(), e.getMessage()));
       Thread.currentThread().interrupt();
     } finally {
       pierQueueLocker.unlock();

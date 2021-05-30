@@ -45,7 +45,9 @@ public class Ship implements Callable<Ship> {
                                 pier.getId()));
       port.setPier(pier);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      logger.error(String.format("Ship.call() id=%d InterruptedException. Thread: %s Message: %s",
+                                 shipId, Thread.currentThread().getName(), e.getMessage()));
+      Thread.currentThread().interrupt();
     }
     return this;
   }

@@ -22,21 +22,21 @@ public class Pier {
       logger.info(String.format("[%s]Unloading ship with id=%d.", Thread.currentThread().getName(), ship.getShipId()));
       while (ship.getContainersCount() > 0) {
         TimeUnit.SECONDS.sleep(2);
-        if (port.increaseContainersCount()) {
-          ship.decreaseContainersCount();
-        }
+        port.increaseContainersCount();
+        ship.decreaseContainersCount();
       }
 
       logger.info(String.format("[%s]Loading ship with id=%d.", Thread.currentThread().getName(), ship.getShipId()));
       while (ship.getContainersCount() < Ship.MAX_CONTAINER_CAPACITY) {
         TimeUnit.SECONDS.sleep(2);
-        if (port.decreaseContainersCount()) {
-          ship.increaseContainersCount();
-        }
+        port.decreaseContainersCount();
+        ship.increaseContainersCount();
       }
       logger.info(String.format("[%s]Ship with id=%d handled.", Thread.currentThread().getName(), ship.getShipId()));
     } catch (InterruptedException e) {
-      logger.error(String.format("Pier error. Message: %s", e.getMessage()));
+      logger.error(String.format("Pier InterruptedException. Thread: %s Message: %s",
+                                 Thread.currentThread().getName(), e.getMessage()));
+      Thread.currentThread().interrupt();
     }
   }
 
