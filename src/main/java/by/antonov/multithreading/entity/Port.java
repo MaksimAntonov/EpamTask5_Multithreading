@@ -1,6 +1,7 @@
 package by.antonov.multithreading.entity;
 
 import java.util.ArrayDeque;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -13,9 +14,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Port {
-  private final static Logger logger = LogManager.getLogger();
+  private static final Logger logger = LogManager.getLogger();
   private static Port instance;
-  private final static AtomicBoolean isInitialized = new AtomicBoolean(false);
+  private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
   private static final int PIERS_COUNT;
   private static final int CONTAINER_CAPACITY;
   private static final int CONTAINER_MAX_COUNT;
@@ -111,7 +112,7 @@ public class Port {
     }
   }
 
-  public Pier getPier()
+  public Optional<Pier> getPier()
       throws InterruptedException {
     Pier pier = null;
     pierQueueLocker.lock();
@@ -128,10 +129,10 @@ public class Port {
       pierQueueLocker.unlock();
     }
 
-    return pier;
+    return Optional.ofNullable(pier);
   }
 
-  public void setPier(Pier pier) {
+  public void releasePier(Pier pier) {
     if (pier != null) {
       pierQueueLocker.lock();
       try {

@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Pier {
-  private final static Logger logger = LogManager.getLogger();
+  private static final Logger logger = LogManager.getLogger();
   private final Integer id;
 
   public Pier(Integer id) {

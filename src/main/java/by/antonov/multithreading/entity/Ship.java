@@ -1,14 +1,15 @@
 package by.antonov.multithreading.entity;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Ship implements Callable<Ship> {
-  private final static Logger logger = LogManager.getLogger();
+  private static final Logger logger = LogManager.getLogger();
+  public static final Integer MAX_CONTAINER_CAPACITY = 10;
   private final int shipId;
   private int containersCount;
-  public final static Integer MAX_CONTAINER_CAPACITY = 10;
 
   public Ship(int shipId, int containersCount) {
     logger.info(String.format("Create Ship id=%d with %d containers.", shipId, containersCount));
@@ -36,14 +37,20 @@ public class Ship implements Callable<Ship> {
   public Ship call() {
     Port port = Port.getInstance();
     try {
-      Pier pier = port.getPier();
-      logger.info(String.format("[%s]Ship id=%d on pier #%d", Thread.currentThread().getName(), shipId, pier.getId()));
+      Optional<Pier> pierOptional = port.getPier();
+      if (pierOptional.isPresent()) {
+        Pier pier = pierOptional.get();
+        logger.info(String.format("[%s]Ship id=%d on pier #%d",
+                                  Thread.currentThread().getName(),
+                                  shipId,
+                                  pier.getId()));
 
-      pier.handle(this);
+        pier.handle(this);
 
-      logger.info(String.format("[%s]Ship id=%d leaving pier #%d", Thread.currentThread().getName(), shipId,
-                                pier.getId()));
-      port.setPier(pier);
+        logger.info(String.format("[%s]Ship id=%d leaving pier #%d", Thread.currentThread().getName(), shipId,
+                                  pier.getId()));
+        port.releasePier(pier);
+      }
     } catch (InterruptedException e) {
       logger.error(String.format("Ship.call() id=%d InterruptedException. Thread: %s Message: %s",
                                  shipId, Thread.currentThread().getName(), e.getMessage()));
