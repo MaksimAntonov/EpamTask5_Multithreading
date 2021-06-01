@@ -112,8 +112,7 @@ public class Port {
     }
   }
 
-  public Optional<Pier> getPier()
-      throws InterruptedException {
+  public Optional<Pier> getPier() {
     Pier pier = null;
     pierQueueLocker.lock();
     try {

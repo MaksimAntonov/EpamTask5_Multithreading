@@ -1,6 +1,7 @@
 package by.antonov.multithreading.entity;
 
-import java.util.Optional;
+import by.antonov.multithreading.entity.shipstate.ShipState;
+import by.antonov.multithreading.entity.shipstate.WaitingState;
 import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 public class Ship implements Callable<Ship> {
   private static final Logger logger = LogManager.getLogger();
   public static final Integer MAX_CONTAINER_CAPACITY = 10;
+  private ShipState shipState;
+  private Pier pier;
   private final int shipId;
   private int containersCount;
 
@@ -33,29 +36,34 @@ public class Ship implements Callable<Ship> {
     --containersCount;
   }
 
+  public void setPier(Pier pier) {
+    if (pier != null) {
+      this.pier = pier;
+    }
+  }
+
+  public Pier releasePier() {
+    Pier pier = this.pier;
+    this.pier = null;
+    return pier;
+  }
+
+  public Boolean isMoored() {
+    return this.pier != null;
+  }
+
+  public void operation() {
+    shipState.operation(this);
+    shipState = shipState.changeState();
+  }
+
   @Override
   public Ship call() {
-    Port port = Port.getInstance();
-    try {
-      Optional<Pier> pierOptional = port.getPier();
-      if (pierOptional.isPresent()) {
-        Pier pier = pierOptional.get();
-        logger.info(String.format("[%s]Ship id=%d on pier #%d",
-                                  Thread.currentThread().getName(),
-                                  shipId,
-                                  pier.getId()));
+    this.shipState = new WaitingState();
+    do {
+      this.operation();
+    } while (!shipState.isLastState());
 
-        pier.handle(this);
-
-        logger.info(String.format("[%s]Ship id=%d leaving pier #%d", Thread.currentThread().getName(), shipId,
-                                  pier.getId()));
-        port.releasePier(pier);
-      }
-    } catch (InterruptedException e) {
-      logger.error(String.format("Ship.call() id=%d InterruptedException. Thread: %s Message: %s",
-                                 shipId, Thread.currentThread().getName(), e.getMessage()));
-      Thread.currentThread().interrupt();
-    }
     return this;
   }
 
