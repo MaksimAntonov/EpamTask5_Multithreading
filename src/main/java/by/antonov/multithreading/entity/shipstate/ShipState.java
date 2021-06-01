@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public abstract class ShipState {
+
   protected static final Logger logger = LogManager.getLogger();
   private final Boolean lastState;
 
@@ -20,7 +21,8 @@ public abstract class ShipState {
     return this.lastState;
   }
 
-  public void operation(Ship ship) {}
+  public void operation(Ship ship) {
+  }
 
   public abstract ShipState changeState();
 

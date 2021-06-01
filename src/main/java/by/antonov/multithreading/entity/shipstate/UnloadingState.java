@@ -5,6 +5,7 @@ import by.antonov.multithreading.entity.Ship;
 import java.util.concurrent.TimeUnit;
 
 public class UnloadingState extends ShipState {
+
   public UnloadingState() {
     super();
   }

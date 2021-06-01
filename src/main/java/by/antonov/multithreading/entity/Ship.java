@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Ship implements Callable<Ship> {
+
   private static final Logger logger = LogManager.getLogger();
   public static final Integer MAX_CONTAINER_CAPACITY = 10;
   private ShipState shipState;

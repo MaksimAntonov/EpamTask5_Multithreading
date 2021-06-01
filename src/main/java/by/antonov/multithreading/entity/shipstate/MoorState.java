@@ -6,6 +6,7 @@ import by.antonov.multithreading.entity.Ship;
 import java.util.Optional;
 
 public class MoorState extends ShipState {
+
   public MoorState() {
     super();
   }

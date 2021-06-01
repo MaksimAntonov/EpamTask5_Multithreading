@@ -5,6 +5,7 @@ import by.antonov.multithreading.entity.Port;
 import by.antonov.multithreading.entity.Ship;
 
 public class UnmoorState extends ShipState {
+
   public UnmoorState() {
     super();
   }

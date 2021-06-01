@@ -5,6 +5,7 @@ import by.antonov.multithreading.entity.Ship;
 import java.util.concurrent.TimeUnit;
 
 public class LoadingState extends ShipState {
+
   @Override
   public ShipState changeState() {
     return new UnmoorState();

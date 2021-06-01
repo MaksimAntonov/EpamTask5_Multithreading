@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Port {
+
   private static final Logger logger = LogManager.getLogger();
   private static Port instance;
   private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
@@ -21,6 +22,7 @@ public class Port {
   private static final int CONTAINER_CAPACITY;
   private static final int CONTAINER_MAX_COUNT;
   private static final int CONTAINER_MIN_COUNT;
+  private static final int CONTAINER_RESET_COUNT;
   private static int containerCount;
   private final Queue<Ship> shipsInQueue = new ArrayDeque<>();
   private final Queue<Pier> pierQueue = new ArrayDeque<>();
@@ -33,8 +35,9 @@ public class Port {
       ResourceBundle resourceBundle = ResourceBundle.getBundle("data/Port");
       PIERS_COUNT = Integer.parseInt(resourceBundle.getString("PiersCount"));
       CONTAINER_CAPACITY = Integer.parseInt(resourceBundle.getString("ContainerCapacity"));
-      CONTAINER_MAX_COUNT = (int) (CONTAINER_CAPACITY * 0.9);
-      CONTAINER_MIN_COUNT = (int) (CONTAINER_CAPACITY * 0.2);
+      CONTAINER_MAX_COUNT = Integer.parseInt(resourceBundle.getString("ContainerMaxCount"));
+      CONTAINER_MIN_COUNT = Integer.parseInt(resourceBundle.getString("ContainerMinCount"));
+      CONTAINER_RESET_COUNT = Integer.parseInt(resourceBundle.getString("ContainerResetCount"));
       containerCount = Integer.parseInt(resourceBundle.getString("ContainerCount"));
     } catch (Exception e) {
       logger.fatal(String.format("Port initialize error. Message: %s", e.getMessage()));
@@ -43,7 +46,7 @@ public class Port {
   }
 
   private Port() {
-    for (int i = 0; i < PIERS_COUNT; i++){
+    for (int i = 0; i < PIERS_COUNT; i++) {
       pierQueue.add(new Pier(i + 1));
     }
   }
@@ -69,7 +72,7 @@ public class Port {
         ++containerCount;
 
         if (containerCount > CONTAINER_MAX_COUNT) {
-          containerCount = (int) (CONTAINER_CAPACITY * 0.75);
+          containerCount = CONTAINER_RESET_COUNT;
         }
       }
     } finally {
@@ -84,7 +87,7 @@ public class Port {
         --containerCount;
 
         if (containerCount < CONTAINER_MIN_COUNT) {
-          containerCount = (int) (CONTAINER_CAPACITY * 0.75);
+          containerCount = CONTAINER_RESET_COUNT;
         }
       }
     } finally {
