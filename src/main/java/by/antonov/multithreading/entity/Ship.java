@@ -9,16 +9,20 @@ import org.apache.logging.log4j.Logger;
 public class Ship implements Callable<Ship> {
 
   private static final Logger logger = LogManager.getLogger();
-  public static final Integer MAX_CONTAINER_CAPACITY = 10;
+  private static final int MAX_CONTAINER_CAPACITY = 10;
+  private final int shipId;
+  private final int containersForUnloading;
+  private final int containersForLoading;
   private ShipState shipState;
   private Pier pier;
-  private final int shipId;
   private int containersCount;
 
-  public Ship(int shipId, int containersCount) {
+  public Ship(int shipId, int containersCount, int containersForUnloading, int containersForLoading) {
     logger.info(String.format("Create Ship id=%d with %d containers.", shipId, containersCount));
     this.shipId = shipId;
     this.containersCount = containersCount;
+    this.containersForUnloading = containersForUnloading;
+    this.containersForLoading = containersForLoading;
   }
 
   public int getShipId() {
@@ -35,6 +39,23 @@ public class Ship implements Callable<Ship> {
 
   public void decreaseContainersCount() {
     --containersCount;
+  }
+
+  public boolean mustBeUnloaded() {
+    return (containersForUnloading > 0);
+  }
+
+  public boolean mustBeLoaded() {
+    return (containersForLoading > 0);
+  }
+
+  public int unloadingContainers() {
+    return (containersCount > containersForUnloading) ? containersCount - containersForUnloading : 0;
+  }
+
+  public int loadingContainers() {
+    int summary = containersCount + containersForLoading;
+    return Math.min(summary, MAX_CONTAINER_CAPACITY);
   }
 
   public void setPier(Pier pier) {
@@ -54,8 +75,9 @@ public class Ship implements Callable<Ship> {
   }
 
   public void operation() {
-    shipState.operation(this);
-    shipState = shipState.changeState();
+    if (shipState.operation(this)) {
+      shipState = shipState.changeState(this);
+    }
   }
 
   @Override
@@ -93,6 +115,9 @@ public class Ship implements Callable<Ship> {
   public String toString() {
     final StringBuilder sb = new StringBuilder("Ship{");
     sb.append("shipId=").append(shipId);
+    sb.append(", containersForUnloading=").append(containersForUnloading);
+    sb.append(", containersForLoading=").append(containersForLoading);
+    sb.append(", pier=").append(pier);
     sb.append(", containersCount=").append(containersCount);
     sb.append('}');
     return sb.toString();

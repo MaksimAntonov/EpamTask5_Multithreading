@@ -11,25 +11,34 @@ public class UnloadingState extends ShipState {
   }
 
   @Override
-  public ShipState changeState() {
-    return new LoadingState();
+  public ShipState changeState(Ship ship) {
+    ShipState shipState;
+    if (ship.mustBeLoaded()) {
+      shipState = new LoadingState();
+    } else {
+      shipState = new UnmoorState();
+    }
+    return shipState;
   }
 
   @Override
-  public void operation(Ship ship) {
+  public boolean operation(Ship ship) {
+    boolean result = false;
     if (ship.isMoored()) {
       Port port = Port.getInstance();
       try {
-        logger.info(String.format("[%s]Unloading ship with id=%d.", Thread.currentThread().getName(),
-                                  ship.getShipId()));
-        while (ship.getContainersCount() > 0) {
+        logger.info("Unloading ship {}", ship);
+        while (ship.getContainersCount() > ship.unloadingContainers()) {
           TimeUnit.SECONDS.sleep(2);
           port.increaseContainersCount();
           ship.decreaseContainersCount();
         }
+        result = true;
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
       }
     }
+
+    return result;
   }
 }

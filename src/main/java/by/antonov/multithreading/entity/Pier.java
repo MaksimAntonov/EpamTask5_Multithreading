@@ -6,13 +6,13 @@ import org.apache.logging.log4j.Logger;
 public class Pier {
 
   private static final Logger logger = LogManager.getLogger();
-  private final Integer id;
+  private final int id;
 
-  public Pier(Integer id) {
+  public Pier(int id) {
     this.id = id;
   }
 
-  public Integer getId() {
+  public int getId() {
     return id;
   }
 
@@ -26,13 +26,21 @@ public class Pier {
     }
 
     Pier pier = (Pier) o;
-    return id.equals(pier.getId());
+    return (id == pier.getId());
   }
 
   @Override
   public int hashCode() {
     int result = logger != null ? logger.hashCode() : 0;
-    result = 31 * result + (id != null ? id.hashCode() : 0);
+    result = 31 * result + id;
     return result;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("Pier{");
+    sb.append("id=").append(id);
+    sb.append('}');
+    return sb.toString();
   }
 }

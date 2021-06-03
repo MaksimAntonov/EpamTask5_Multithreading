@@ -7,24 +7,28 @@ import java.util.concurrent.TimeUnit;
 public class LoadingState extends ShipState {
 
   @Override
-  public ShipState changeState() {
+  public ShipState changeState(Ship ship) {
     return new UnmoorState();
   }
 
   @Override
-  public void operation(Ship ship) {
+  public boolean operation(Ship ship) {
+    boolean result = false;
     if (ship.isMoored()) {
       Port port = Port.getInstance();
       try {
-        logger.info(String.format("[%s]Loading ship with id=%d.", Thread.currentThread().getName(), ship.getShipId()));
-        while (ship.getContainersCount() < Ship.MAX_CONTAINER_CAPACITY) {
+        logger.info("Loading ship {}", ship);
+        while (ship.getContainersCount() < ship.loadingContainers()) {
           TimeUnit.SECONDS.sleep(2);
           port.decreaseContainersCount();
           ship.increaseContainersCount();
         }
+
+        result = true;
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
       }
     }
+    return result;
   }
 }

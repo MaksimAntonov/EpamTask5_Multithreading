@@ -11,15 +11,16 @@ public class UnmoorState extends ShipState {
   }
 
   @Override
-  public ShipState changeState() {
+  public ShipState changeState(Ship ship) {
     return new LeavedState();
   }
 
   @Override
-  public void operation(Ship ship) {
+  public boolean operation(Ship ship) {
     Port port = Port.getInstance();
     Pier pier = ship.releasePier();
     port.releasePier(pier);
-    logger.info(String.format("[%s]Ship with id=%d handled.", Thread.currentThread().getName(), ship.getShipId()));
+    logger.info("Ship handled {}", ship);
+    return true;
   }
 }

@@ -1,6 +1,7 @@
 package by.antonov.multithreading.entity;
 
 import java.util.ArrayDeque;
+import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.ResourceBundle;
@@ -39,7 +40,7 @@ public class Port {
       CONTAINER_MIN_COUNT = Integer.parseInt(resourceBundle.getString("ContainerMinCount"));
       CONTAINER_RESET_COUNT = Integer.parseInt(resourceBundle.getString("ContainerResetCount"));
       containerCount = Integer.parseInt(resourceBundle.getString("ContainerCount"));
-    } catch (Exception e) {
+    } catch (MissingResourceException e) {
       logger.fatal(String.format("Port initialize error. Message: %s", e.getMessage()));
       throw new ExceptionInInitializerError(String.format("Port initialize error. Message: %s", e.getMessage()));
     }

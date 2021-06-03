@@ -1,5 +1,7 @@
 package by.antonov.multithreading.entity.shipstate;
 
+import by.antonov.multithreading.entity.Ship;
+
 public class LeavedState extends ShipState {
 
   public LeavedState() {
@@ -7,7 +9,7 @@ public class LeavedState extends ShipState {
   }
 
   @Override
-  public ShipState changeState() {
+  public ShipState changeState(Ship ship) {
     return null;
   }
 }

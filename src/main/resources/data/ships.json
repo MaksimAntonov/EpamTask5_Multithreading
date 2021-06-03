@@ -1,12 +1,12 @@
 [
-  { "shipId": 1, "containersCount": 7 },
-  { "shipId": 2, "containersCount": 3 },
-  { "shipId": 3, "containersCount": 5 },
-  { "shipId": 4, "containersCount": 3 },
-  { "shipId": 5, "containersCount": 7 },
-  { "shipId": 6, "containersCount": 10 },
-  { "shipId": 7, "containersCount": 2 },
-  { "shipId": 8, "containersCount": 9 },
-  { "shipId": 9, "containersCount": 10 },
-  { "shipId": 10, "containersCount": 4 }
+  { "shipId": 1, "containersCount": 7, "containersForUnloading": 7, "containersForLoading": 0 },
+  { "shipId": 2, "containersCount": 3, "containersForUnloading": 0, "containersForLoading": 7 },
+  { "shipId": 3, "containersCount": 5, "containersForUnloading": 0, "containersForLoading": 0 },
+  { "shipId": 4, "containersCount": 3, "containersForUnloading": 10, "containersForLoading": 10 },
+  { "shipId": 5, "containersCount": 7, "containersForUnloading": 10, "containersForLoading": 10 },
+  { "shipId": 6, "containersCount": 10, "containersForUnloading": 10, "containersForLoading": 10 },
+  { "shipId": 7, "containersCount": 2, "containersForUnloading": 10, "containersForLoading": 10 },
+  { "shipId": 8, "containersCount": 9, "containersForUnloading": 10, "containersForLoading": 10 },
+  { "shipId": 9, "containersCount": 10, "containersForUnloading": 10, "containersForLoading": 10 },
+  { "shipId": 10, "containersCount": 4, "containersForUnloading": 10, "containersForLoading": 10 }
 ]

@@ -12,21 +12,31 @@ public class MoorState extends ShipState {
   }
 
   @Override
-  public ShipState changeState() {
-    return new UnloadingState();
+  public ShipState changeState(Ship ship) {
+    ShipState shipState;
+    if (ship.mustBeUnloaded()) {
+      shipState = new UnloadingState();
+    } else if (ship.mustBeLoaded()) {
+      shipState = new LoadingState();
+    } else {
+      shipState = new UnmoorState();
+    }
+
+    return shipState;
   }
 
   @Override
-  public void operation(Ship ship) {
+  public boolean operation(Ship ship) {
+    boolean result = false;
     Port port = Port.getInstance();
     Optional<Pier> pierOpt = port.getPier();
     if (pierOpt.isPresent()) {
       Pier pier = pierOpt.get();
       ship.setPier(pier);
-      logger.info(String.format("[%s]Ship id=%d on pier #%d",
-                                Thread.currentThread().getName(),
-                                ship.getShipId(),
-                                pier.getId()));
+      logger.info("Ship on pier {}", ship);
+      result = true;
     }
+
+    return result;
   }
 }

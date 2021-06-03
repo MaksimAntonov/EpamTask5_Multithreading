@@ -1,5 +1,7 @@
 package by.antonov.multithreading.entity.shipstate;
 
+import by.antonov.multithreading.entity.Ship;
+
 public class WaitingState extends ShipState {
 
   public WaitingState() {
@@ -7,7 +9,14 @@ public class WaitingState extends ShipState {
   }
 
   @Override
-  public ShipState changeState() {
-    return new MoorState();
+  public ShipState changeState(Ship ship) {
+    ShipState shipState;
+    if (ship.mustBeUnloaded() | ship.mustBeUnloaded()) {
+      shipState = new MoorState();
+    } else {
+      shipState = new LeavedState();
+    }
+
+    return shipState;
   }
 }

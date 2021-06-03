@@ -7,23 +7,24 @@ import org.apache.logging.log4j.Logger;
 public abstract class ShipState {
 
   protected static final Logger logger = LogManager.getLogger();
-  private final Boolean lastState;
+  private final boolean lastState;
 
   public ShipState() {
     this(false);
   }
 
-  public ShipState(Boolean lastState) {
+  public ShipState(boolean lastState) {
     this.lastState = lastState;
   }
 
-  public Boolean isLastState() {
+  public boolean isLastState() {
     return this.lastState;
   }
 
-  public void operation(Ship ship) {
+  public boolean operation(Ship ship) {
+    return true;
   }
 
-  public abstract ShipState changeState();
+  public abstract ShipState changeState(Ship ship);
 
 }
